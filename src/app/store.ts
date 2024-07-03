@@ -7,9 +7,9 @@ import {authReducer} from '../features/Login/auth-reducer'
 import createSagaMiddleware from 'redux-saga'
 import {tasksWatcherSaga} from "../features/TodolistsList/tasks-saga";
 import {appWatcherSaga} from "./app-saga";
-import {all, takeEvery} from 'redux-saga/effects';
+import {all} from 'redux-saga/effects';
 import {todolistsWatcherSaga} from "../features/TodolistsList/todolists-saga";
-import {loginWorkerSaga, logoutWorkerSaga} from "../features/Login/auth-saga";
+import {authWatcherSaga} from "../features/Login/auth-saga";
 
 
 // объединяя reducer-ы с помощью combineReducers,
@@ -74,6 +74,9 @@ function* rootWatcher() {
 
 }
 
+
+
+
 /*function* todolistsWatcherSaga() {
   yield takeEvery('TODOLISTS/FETCH-TODOLISTS', fetchTodolistsWorkerSaga)
   yield takeEvery('TODOLISTS/REMOVE-TODOLIST', removeTodolistWorkerSaga)
@@ -81,10 +84,12 @@ function* rootWatcher() {
   yield takeEvery('TODOLISTS/CHANGE-TODOLIST', changeTodolistWorkerSaga)
 }*/
 
+/*
 function* authWatcherSaga() {
 yield takeEvery('AUTH/LOGIN-AUTH',loginWorkerSaga)
 yield takeEvery('AUTH/LOGOUT-AUTH',logoutWorkerSaga)
 }
+*/
 // а это, чтобы можно было в консоли браузера обращаться к store в любой момент
 // @ts-ignore
 window.store = store;

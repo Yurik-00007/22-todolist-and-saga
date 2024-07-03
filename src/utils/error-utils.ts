@@ -18,7 +18,7 @@ export const handleServerNetworkError = (error: { message: string }, dispatch: D
     dispatch(setAppStatusAC('failed'))
 }
 */
-export function* handleServerAppError<D>(data: ResponseType<D>) {
+export function* handleServerAppErrorForSaga<D>(data: ResponseType<D>) {
     if (data.messages.length) {
         yield put(setAppErrorAC(data.messages[0]));
     } else {
@@ -27,7 +27,7 @@ export function* handleServerAppError<D>(data: ResponseType<D>) {
     yield put(setAppStatusAC('failed'));
 }
 
-export function* handleServerNetworkError(error: { message: string }) {
+export function* handleServerNetworkErrorForSaga(error: { message: string }) {
     yield put(setAppErrorAC(error.message ? error.message : 'Some error occurred'));
     yield put(setAppStatusAC('failed'));
 }

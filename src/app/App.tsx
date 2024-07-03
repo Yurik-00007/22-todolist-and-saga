@@ -34,7 +34,6 @@ function App({demo = false}: PropsType) {
   useEffect(() => {
     // dispatch(initializeAppTC())
     dispatch(initializeApp())
-    console.log('sdvnsdkjv')
   }, [])
 
   const logoutHandler = useCallback(() => {

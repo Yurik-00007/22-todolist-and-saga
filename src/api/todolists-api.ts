@@ -29,16 +29,24 @@ export const todolistsAPI = {
         const promise = instance.put<ResponseType>(`todo-lists/${id}`, {title: title});
         return promise;
     },
-    getTasks(todolistId: string):Promise<AxiosResponse<GetTasksResponse>> {
-        return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`);
+    // getTasks(todolistId: string):Promise<AxiosResponse<GetTasksResponse>> {
+    getTasks(todolistId: string):Promise<GetTasksResponse> {
+        return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`)
+          .then(res => res.data)
     },
+/*
     deleteTask(todolistId: string, taskId: string):Promise<AxiosResponse<ResponseType>> {
+*/
+    deleteTask(todolistId: string, taskId: string) {
+        // debugger
         return instance.delete<ResponseType>(`todo-lists/${todolistId}/tasks/${taskId}`);
     },
     createTask(todolistId: string, taskTitile: string) {
+        // debugger
         return instance.post<ResponseType<{ item: TaskType}>>(`todo-lists/${todolistId}/tasks`, {title: taskTitile});
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
+        // debugger
         return instance.put<ResponseType<TaskType>>(`todo-lists/${todolistId}/tasks/${taskId}`, model);
     }
 }
@@ -51,6 +59,8 @@ export type LoginParamsType = {
     captcha?: string
 }
 
+export type MeResponseType=ResponseType<{id: number; email: string; login: string}>
+
 export const authAPI = {
     login(data: LoginParamsType) {
         const promise = instance.post<ResponseType<{userId?: number}>>('auth/login', data);
@@ -61,8 +71,8 @@ export const authAPI = {
         return promise;
     },
     me() {
-       const promise =  instance.get<ResponseType<{id: number; email: string; login: string}>>('auth/me');
-       return promise
+       const promise =  instance.get<MeResponseType>('auth/me');
+       return promise.then(res=>res.data)
     }
 }
 
@@ -111,7 +121,7 @@ export type UpdateTaskModelType = {
     startDate: string
     deadline: string
 }
-type GetTasksResponse = {
+export type GetTasksResponse = {
     error: string | null
     totalCount: number
     items: TaskType[]

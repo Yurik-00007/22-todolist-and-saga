@@ -1,7 +1,7 @@
-import {call, put} from "redux-saga/effects";
+import {call, put, takeEvery} from "redux-saga/effects";
 import {setAppStatusAC} from "../../app/app-reducer";
 import {authAPI, LoginParamsType} from "../../api/todolists-api";
-import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
+import {handleServerAppErrorForSaga, handleServerNetworkErrorForSaga} from "../../utils/error-utils";
 import {setIsLoggedInAC} from "./auth-reducer";
 
 export function* loginWorkerSaga(action: ReturnType<typeof loginAuth>) {
@@ -14,11 +14,11 @@ export function* loginWorkerSaga(action: ReturnType<typeof loginAuth>) {
       yield put(setAppStatusAC('succeeded'))
     } else {
       // handleServerAppError(res.data, dispatch)
-      // yield call(handleServerAppError, res.data);
+      yield call(handleServerAppErrorForSaga, res.data);
     }
   } catch (error) {
     // handleServerNetworkError(error, dispatch)
-    // yield call(handleServerNetworkError, error);
+    yield call(handleServerNetworkErrorForSaga, error);
   }
 }
 
@@ -31,14 +31,20 @@ export function* logoutWorkerSaga() {
     if (res.data.resultCode === 0) {
       yield put(setIsLoggedInAC(false))
       yield put(setAppStatusAC('succeeded'))
-    } else {
+    }
+    else {
       // handleServerAppError(res.data, dispatch)
-      yield call(handleServerAppError, res.data)
+      yield* handleServerAppErrorForSaga(res.data);
     }
   } catch (error) {
     // handleServerNetworkError(error, dispatch)
-    yield call(handleServerNetworkError, error)
+    yield* handleServerNetworkErrorForSaga(error)
   }
 }
 
 export const logoutAuth = () => ({type: 'AUTH/LOGOUT-AUTH'})
+
+export function* authWatcherSaga() {
+  yield takeEvery('AUTH/LOGIN-AUTH',loginWorkerSaga)
+  yield takeEvery('AUTH/LOGOUT-AUTH',logoutWorkerSaga)
+}
